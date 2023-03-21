@@ -116,7 +116,7 @@ export default function Claim() {
         }).map(line => {
             const [privateKey, address] = line.trim().split(',');
             console.log(privateKey, address)
-            return [new ethers.Wallet(privateKey, provider.current).connect(provider.current), address];
+            return [new ethers.Wallet(privateKey, provider.current).connect(provider.current as ethers.providers.BaseProvider), address];
         });
         setWallets(infos.map(info => info[0]));
         setDestinations(infos.map(info => info[1]));
@@ -139,7 +139,7 @@ export default function Claim() {
         });
 
         const promises2 = wallets.map((wallet, index) => {
-            return claimContract.current.claimableTokens(wallet.address);
+            return (claimContract.current as ethers.Contract).claimableTokens(wallet.address);
         })
         Promise.all(promises2).then((newBalances) => {
             console.log("claimable balances updated", newBalances)
