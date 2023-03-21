@@ -1,11 +1,13 @@
 import { ethers } from "ethers";
 import { useEffect, useRef, useState } from "react";
 
-//const WS_SERVER = "ws://144.76.39.46:8548";
+const WS_SERVER = "ws://144.76.39.46:8548";
+const CLAIM_CONTRACT_ADDRESS = "0x67a24CE4321aB3aF51c2D0a4801c3E111D88C9d9";
+const TOKEN_ADDRESS = "0x912CE59144191C1204E64559FE8253a0e49E6548";
 
-const WS_SERVER = "ws://localhost:8545";
-const CLAIM_CONTRACT_ADDRESS = "0x59b670e9fA9D0A427751Af201D676719a970857b";
-const TOKEN_ADDRESS = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
+// const WS_SERVER = "ws://localhost:8545";
+// const CLAIM_CONTRACT_ADDRESS = "0x59b670e9fA9D0A427751Af201D676719a970857b";
+// const TOKEN_ADDRESS = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
 
 const CLAIM_CONTRACT_ABI = [
     "function claimPeriodStart() public view returns (uint256)",
