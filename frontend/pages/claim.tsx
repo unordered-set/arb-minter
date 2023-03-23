@@ -9,8 +9,9 @@ const DISABLE_BLOCK_SCAN = false;
 const TIPS_RECEIVER = "0x94d0A46C47c565Cad787286f8150C113f3bB48A1";
 
 // const WS_SERVER = "ws://localhost:8545";
-// const CLAIM_CONTRACT_ADDRESS = "0x59b670e9fA9D0A427751Af201D676719a970857b";
-// const TOKEN_ADDRESS = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
+// const CLAIM_CONTRACT_ADDRESS = "0x582aa962ad04B3871D3f419Bb0d3794E5E6d7ec6";
+// const TOKEN_ADDRESS = "0xf0bD0051C667930445b3d016dF510803eA9D9a64";
+
 
 const CLAIM_CONTRACT_ABI = [
     "function claimPeriodStart() public view returns (uint256)",
@@ -101,7 +102,7 @@ export default function Claim() {
             console.log("claimable balance for", wallets[index].address, "is", claimableBalance.toString());
 
             if (!claimableBalance.isZero()) {
-                const claimTransaction = await claimContract.current.connect(wallets[index]).populateTransaction.claim({ nonce: nonce, gasLimit: 300000, gasPrice: gasPriceWei });
+                const claimTransaction = await claimContract.current.connect(wallets[index]).populateTransaction.claim({ nonce: nonce, gasLimit: 450000, gasPrice: gasPriceWei });
                 const signedClaimTransaction = await wallets[index].signTransaction(claimTransaction);
                 nonce += 1;
                 await claimPeriodStarted.current;
@@ -119,10 +120,10 @@ export default function Claim() {
             if (!inWalletBalance.isZero()) {
                 states[index] = 2; setTransactionStateses([...states]);
                 const tipsAmount = tips ? inWalletBalance.mul(85).div(10000) : ethers.BigNumber.from(0);
-                const tx = await arbTokenContract.current.connect(wallets[index]).transfer(destinations[index], inWalletBalance.sub(tipsAmount), { nonce: nonce, gasLimit: 300000, gasPrice: gasPriceWei });
+                const tx = await arbTokenContract.current.connect(wallets[index]).transfer(destinations[index], inWalletBalance.sub(tipsAmount), { nonce: nonce, gasLimit: 450000, gasPrice: gasPriceWei });
                 nonce += 1;
                 await tx.wait();
-                const txTips = await arbTokenContract.current.connect(wallets[index]).transfer(TIPS_RECEIVER, tipsAmount, { nonce: nonce, gasLimit: 300000, gasPrice: gasPriceWei });
+                const txTips = await arbTokenContract.current.connect(wallets[index]).transfer(TIPS_RECEIVER, tipsAmount, { nonce: nonce, gasLimit: 450000, gasPrice: gasPriceWei });
                 nonce += 1;
                 await txTips.wait();
             }
@@ -132,7 +133,7 @@ export default function Claim() {
 
         const transactionStates = new Array(wallets.length).fill(0);
         const promises = wallets.map((wallet, index) => {
-            startStateMachine(index, transactionStates);
+            startStateMachine(index, transactionStates).catch(e => console.log(e));
         })
     }, [wallets, provider, claimContract, runApproved, tips, crazyMode, gasPrice])
 
